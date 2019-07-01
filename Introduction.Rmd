@@ -1,0 +1,19 @@
+---
+title: "Introduction - Day_1"
+author: "Kieran Schubert"
+date: "7/1/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+install.packages("devtools")
+library(devtools)
+```
+
+## Introduction
+
+```{r setup, include=FALSE}
+devtools::install_github("r-lib/devtools")
+```
+
