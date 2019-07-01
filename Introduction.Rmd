@@ -5,15 +5,31 @@ date: "7/1/2019"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, eval=FALSE, include=F}
 knitr::opts_chunk$set(echo = TRUE)
-install.packages("devtools")
+
+install.packages("devtools", repos='https://stat.ethz.ch/CRAN/')
 library(devtools)
+devtools::install_github("SMAC-Group/stat297")
+library(stat297)
 ```
 
-## Introduction
+# Introduction
 
-```{r setup, include=FALSE}
-devtools::install_github("r-lib/devtools")
+## Shiny playground
+
+```{r eval=F, include=F}
+stat297::runShiny("rmd")
 ```
 
+## Example of a table
+
+Fruits | Price | Origin
+---|---|---
+Banana | 1.50 | Venezuela
+Kiwi | 3.20 | Spain
+
+# Test
+```{r echo=T}
+
+```
