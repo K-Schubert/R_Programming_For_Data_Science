@@ -7,7 +7,6 @@ library(dplyr)
 symbols <- c("AAPL", "GOOG")
 
 getSymbols(symbols, from = "2018-01-01", to = Sys.Date(), src =  "yahoo", adjust =  TRUE)
-stocks <- cbind(AAPL$AAPL.Close, GOOG$GOOG.Close)
 
 AAPL.ret <- dailyReturn(AAPL$AAPL.Close)
 GOOG.ret <- dailyReturn(GOOG$GOOG.Close)
