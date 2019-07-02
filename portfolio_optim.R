@@ -38,4 +38,5 @@ knitr::kable(investment_summary)
 plot(sqrt(investment_summary[2,]), investment_summary[1,], col=c(1,2,3), pch=16, 
      xlab='St Dev of Returns', ylab='Mean Return')
 legend('topleft', c('AAPL', 'GOOG', 'Investment'), cex=0.75, pch=16, col=c(1,2,3))
-xlab
+grid()
+
