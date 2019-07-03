@@ -94,3 +94,48 @@ for (t in 1:B){
   X[t+1, ] <- X[t, ] + f(Ut[t], a)
 }
 X %>% tail
+
+# EXERCISE 3
+# Invest exactly 10^6 $
+# Invest only in S&P500 stocks
+# Do not spend more than 100$ on execution fees
+
+library(quantmod)
+library(rvest)
+sp500 <- read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")
+
+sp500 %>% 
+  html_nodes(".text") %>% 
+  html_text() -> ticker_sp500
+
+SP500_symbol <- ticker_sp500[(1:499)*2+1]
+SP500_symbol[SP500_symbol == "BRK.B"] <- "BRK-B"
+SP500_symbol[SP500_symbol == "BF.B"] <- "BF-B"
+
+today <- Sys.Date()
+three_year_ago <- seq(today, length = 2, by = "-3 year")[2]
+stocks_tickers <- c("AAPL", "MSFT")
+getSymbols(stocks_tickers, from = three_year_ago, to = today)
+
+nb_ticker <- length(stocks_tickers)
+var_stocks <- rep(NA, nb_ticker)
+names(var_stocks) <- stocks_tickers
+
+for (i in 1:nb_ticker){
+  Xt = na.omit(ClCl(get(stocks_tickers[i])))
+  stocks_tickers[i] = var(Xt)
+}
+
+stocks_tickers
+
+# Execution fees
+X <- 10^6
+w <- c(0.1, 0.9)
+
+if(apply(rbind(40, 0.0001*w*X), 2, max) %>% sum <= 100){
+  C <- apply(rbind(40, 0.0001*w*X), 2, max) %>% sum
+} else{
+  
+}
+
+
