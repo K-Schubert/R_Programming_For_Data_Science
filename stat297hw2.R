@@ -11,7 +11,6 @@ for (i in 1:30){
     print(i)
   }
   }
-}
 
 # EXERCISE 2
 
@@ -101,41 +100,49 @@ X %>% tail
 # Do not spend more than 100$ on execution fees
 
 library(quantmod)
-library(rvest)
-sp500 <- read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")
 
-sp500 %>% 
-  html_nodes(".text") %>% 
-  html_text() -> ticker_sp500
-
-SP500_symbol <- ticker_sp500[(1:499)*2+1]
-SP500_symbol[SP500_symbol == "BRK.B"] <- "BRK-B"
-SP500_symbol[SP500_symbol == "BF.B"] <- "BF-B"
-
-today <- Sys.Date()
-three_year_ago <- seq(today, length = 2, by = "-3 year")[2]
-stocks_tickers <- c("AAPL", "MSFT")
-getSymbols(stocks_tickers, from = three_year_ago, to = today)
-
-nb_ticker <- length(stocks_tickers)
-var_stocks <- rep(NA, nb_ticker)
-names(var_stocks) <- stocks_tickers
-
-for (i in 1:nb_ticker){
-  Xt = na.omit(ClCl(get(stocks_tickers[i])))
-  stocks_tickers[i] = var(Xt)
-}
-
-stocks_tickers
-
-# Execution fees
 X <- 10^6
-w <- c(0.1, 0.9)
+w1 <- seq(0, 1, 0.001)
+w2 <- 1-w1
+ind <- rep(0, length(w1))
+C <- rep(0, length(w1))
 
-if(apply(rbind(40, 0.0001*w*X), 2, max) %>% sum <= 100){
-  C <- apply(rbind(40, 0.0001*w*X), 2, max) %>% sum
-} else{
-  
+# Execution fees constraint
+for (i in 1:length(w1)){
+  if(apply(rbind(40, 0.0001*c(w1[i], w2[i])*X), 2, max) %>% sum <= 100){
+    ind[i] <- i
+    C[i] <- apply(rbind(40, 0.0001*c(w1[i], w2[i])*X), 2, max) %>% sum
+  } else{
+    ind[i] <- 0
+    C[i] <- apply(rbind(40, 0.0001*c(w1[i], w2[i])*X), 2, max) %>% sum
+  }
 }
 
+ind
+
+symbols <- c("AAPL", "MSFT")
+getSymbols(symbols, from = "2015-01-01", to = Sys.Date(), src =  "yahoo", adjust =  TRUE)
+
+AAPL.ret <- dailyReturn(na.omit(AAPL$AAPL.Close))
+MSFT.ret <- dailyReturn(na.omit(MSFT$MSFT.Close))
+rets <- cbind(AAPL.ret$daily.returns, MSFT.ret$daily.returns)
+
+mean.ret <- c(mean(AAPL.ret), mean(MSFT.ret))
+cov.matrix <- cov(rets)
+
+# All possible portfolios (fees < 100$)
+mu_investment <- (w1[ind>0]*mean.ret[1] + (1 - w1[ind>0])*mean.ret[2])*X
+var_investment <- (w1[ind>0]^2*cov.matrix[1,1] + (1 - w1[ind>0])^2*cov.matrix[2,2] + 
+  2*w1[ind>0]*(1 - w1[ind>0])*cov.matrix[1,2])*X^2
+
+plot(var_investment, mu_investment)
+points(min(var_investment), mu_investment[which.min(var_investment)], col='red', pch=16)
+
+# All portfolios
+mu_investment <- w1*mean.ret[1] + (1 - w1)*mean.ret[2]
+var_investment <- w1^2*cov.matrix[1,1] + (1 - w1)^2*cov.matrix[2,2] + 
+  2*w1*(1 - w1)*cov.matrix[1,2]
+
+plot(var_investment, mu_investment)
+points(min(var_investment), mu_investment[which.min(var_investment)], col='red', pch=16)
 
