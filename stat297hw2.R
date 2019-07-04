@@ -40,6 +40,8 @@ uni_coord$wp = 100*as.numeric(uni_wp[1:length(uni_name)])
 # Get division
 uni_coord$conf = rep(c("East Division","West Division"), each = length(uni_name)/2)
 
+
+
 # EXERCISE 3
 # a)
 library(plot3D)
@@ -79,9 +81,6 @@ for (t in 1:B){
 X %>%
   tail
 
-X %>%
-  as.matrix -> X
-
 lines3D(X[,1], X[,2], X[,3])
 
 #b)
@@ -99,7 +98,11 @@ X <- matrix(0, nrow=B+1, ncol=3)
 for (t in 1:B){
   X[t+1, ] <- X[t, ] + f(Ut[t], a)
 }
+
 X %>% tail
+
+lines3D(X[,1], X[,2], X[,3])
+
 
 # EXERCISE 3
 # Invest exactly 10^6 $
@@ -139,7 +142,6 @@ SP500_symbol <- ticker_sp500[(1:499)*2+1]
 SP500_symbol[SP500_symbol == "BRK.B"] <- "BRK-B"
 SP500_symbol[SP500_symbol == "BF.B"] <- "BF-B"
 
-#symbols <- c("AAPL", "MSFT", "NFLX", "CS", "UBS")
 symbols <- SP500_symbol[1:100]
 
 Stocks = lapply(symbols, function(sym) {
@@ -171,6 +173,7 @@ cbind(mu = mu_investment, var = var_investment) %>%
   as.data.frame -> to_plot
 
 to_plot %>%
+  na.omit() %>%
   ggplot() + 
   geom_point(aes(x=var, y=mu, colour='possible portfolios'), alpha=0.3) + 
   geom_point(aes(x=min(var), y=mu[which.min(var)], colour='min-var portfolio')) +
