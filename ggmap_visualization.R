@@ -1,7 +1,13 @@
 library(mapproj)
 devtools::install_github("dkahle/ggmap")
 library(ggmap)
+library(sf)
 library(magrittr)
+library(tmaptools)
+
+# Workaround Google API
+ggmap(get_stamenmap(rbind(as.numeric(paste(geocode_OSM("Geneva")$bbox))), zoom=15))
+
 
 birth_place <- c("Glasgow, Scotland", "Manacor, Spain", "Lausanne, Switzerland", "Belgrade, Serbia", "Basel, Switzerland")
 register_google(key = "YOUR_API_KEY")
