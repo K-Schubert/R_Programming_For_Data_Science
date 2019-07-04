@@ -42,6 +42,7 @@ uni_coord$conf = rep(c("East Division","West Division"), each = length(uni_name)
 
 # EXERCISE 3
 # a)
+library(plot3D)
 
 f <- function(u, a){
   if (u <= a[1]){
@@ -75,7 +76,13 @@ X <- matrix(0, nrow=B+1, ncol=3)
 for (t in 1:B){
   X[t+1, ] <- X[t, ] + f(Ut[t], a)
 }
-X %>% tail
+X %>%
+  tail
+
+X %>%
+  as.matrix -> X
+
+lines3D(X[,1], X[,2], X[,3])
 
 #b)
 B <- 10^5
