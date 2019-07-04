@@ -17,17 +17,21 @@ find_pi = function(B = 5000, seed = 10, make_plot = TRUE){
   # Circle
   circle <- data.frame(x0=0, y0=0, r=1)
   
-  if (make_plot==TRUE){
+  if (make_plot){
+
     point %>%
       ggplot() +
       geom_point(aes(x=x, y=y, col='turquoise'), alpha=0.3) +
       geom_circle(aes(x0=x0, y0=y0, r=r, col='red'), data=circle)
+    
+    
     #par(pty="s")
     #plot(point, ylim=c(-1.2, 1.2), xlim=c(-1.2, 1.2), xlab='x', ylab='y')
     #draw.circle(0, 0, 1, border='red', col=NA)
   }
   
-  return(hat_pi)
+  #hat_pi
+
 }
 
-find_pi(B=500, make_plot=TRUE)
+find_pi(B=50, make_plot=TRUE)
